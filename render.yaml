@@ -3,7 +3,7 @@ services:
     name: pre-loved
     runtime: node
     plan: free
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm run build
+    buildCommand: corepack enable && corepack prepare pnpm@11.15.1 --activate && pnpm install --frozen-lockfile && pnpm run build
     startCommand: node .output/server/index.mjs
     envVars:
       - key: NODE_VERSION

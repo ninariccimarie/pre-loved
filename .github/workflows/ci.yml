@@ -12,7 +12,7 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
-  PNPM_VERSION: '10'
+  PNPM_VERSION: '11.15.1'
   ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD || 'ci-test-password' }}
   SESSION_SECRET: ${{ vars.SESSION_SECRET || 'ci-test-session-secret' }}
   VITE_FORMSPREE_FORM_ID: ${{ vars.VITE_FORMSPREE_FORM_ID || 'test_form_id' }}

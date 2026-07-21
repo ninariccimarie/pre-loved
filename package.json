@@ -2,7 +2,7 @@
   "name": "pre-loved",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@11.15.1",
   "imports": {
     "#/*": "./src/*"
   },

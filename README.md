@@ -13,6 +13,8 @@ A TanStack Start web app for browsing pre-loved items, applying friend promo cod
 ## Quick start
 
 ```bash
+corepack enable
+corepack prepare pnpm@11.15.1 --activate
 pnpm install
 cp .env.example .env
 # Edit .env with your admin password and Formspree form ID
@@ -78,7 +80,7 @@ This app uses **Nitro** and runs as a Node server. Listings live in a **SQLite**
 1. Push this repo to GitHub
 2. Create a **Web Service** on [Render](https://render.com) and connect the repo
 3. Use the included `render.yaml` blueprint, or set manually:
-   - **Build command:** `corepack enable && pnpm install --frozen-lockfile && pnpm run build`
+   - **Build command:** `corepack enable && corepack prepare pnpm@11.15.1 --activate && pnpm install --frozen-lockfile && pnpm run build`
    - **Start command:** `node .output/server/index.mjs`
    - **Disk:** mount at `/data` and set `DATA_DIR=/data`
 4. Add environment variables from `.env.example`
