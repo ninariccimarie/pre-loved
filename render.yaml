@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: pre-loved
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm run build
+    startCommand: node .output/server/index.mjs
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: VITE_FORMSPREE_FORM_ID
+        sync: false
+      - key: DATA_DIR
+        value: /data
+    disk:
+      name: pre-loved-data
+      mountPath: /data
+      sizeGB: 1

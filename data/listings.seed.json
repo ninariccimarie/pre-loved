@@ -1,0 +1,44 @@
+[
+  {
+    "id": "sample-vintage-lamp",
+    "title": "Vintage Table Lamp",
+    "price": 45,
+    "status": "available",
+    "description": "Warm amber glass shade with a brass base. Works perfectly and includes a bulb.",
+    "condition": "well_used",
+    "photos": [
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
+      "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&q=80"
+    ],
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "sample-dining-chair",
+    "title": "Scandinavian Dining Chair",
+    "price": 80,
+    "status": "reserved",
+    "description": "Solid oak frame with a removable cushion cover. Minor scuffs on the legs.",
+    "condition": "lightly_used",
+    "photos": [
+      "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&q=80",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80"
+    ],
+    "createdAt": "2026-01-02T00:00:00.000Z",
+    "updatedAt": "2026-01-02T00:00:00.000Z"
+  },
+  {
+    "id": "sample-kids-books",
+    "title": "Kids Storybook Bundle",
+    "price": 0,
+    "status": "sold",
+    "description": "Set of 12 picture books for ages 3–7. Gently read with no torn pages.",
+    "condition": "like_new",
+    "photos": [
+      "https://images.unsplash.com/photo-1512820790801-4153cc8e5e9f?w=800&q=80"
+    ],
+    "createdAt": "2026-01-03T00:00:00.000Z",
+    "updatedAt": "2026-01-03T00:00:00.000Z"
+  }
+]
