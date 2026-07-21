@@ -89,7 +89,8 @@ Submissions include listing title, price, buyer name, contact number, and whethe
 3. Set promo code and sale discount % in the dashboard
 4. Mark items as reserved or sold as they move through your sale flow
 
-Photo URLs can point to Imgur, Cloudinary, or any public image link (one URL per line in the admin form).
+Photo URLs can be Cloudflare R2 public links (`*.r2.dev` or a custom domain on your bucket),
+presigned R2 URLs, or any other public https image URL (one per line in the admin form).
 
 ## Scripts
 

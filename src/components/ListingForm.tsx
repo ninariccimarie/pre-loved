@@ -124,11 +124,13 @@ const ListingForm = ({
           name="photos"
           className="demo-textarea min-h-28"
           defaultValue={initial?.photos.join('\n') ?? ''}
-          placeholder="https://example.com/photo-1.jpg"
+          placeholder={'https://pub-xxxxx.r2.dev/items/photo-1.jpg\nhttps://cdn.yourdomain.com/photo-2.jpg'}
           required
         />
         <p className="mt-1 text-xs text-[var(--sea-ink-soft)]">
-          Upload images to Imgur, Cloudinary, or similar and paste the direct links here.
+          Paste public https links, one per line. Cloudflare R2 works with a public{' '}
+          <code className="text-[0.7rem]">r2.dev</code> URL or a custom domain on your bucket.
+          Presigned R2 links are also fine.
         </p>
       </div>
 

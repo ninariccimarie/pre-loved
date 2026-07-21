@@ -5,6 +5,7 @@ import {
   LISTING_STATUSES,
   type Listing,
 } from '#/lib/types'
+import { photoUrlsSchema } from '#/lib/photoUrl'
 
 const listingInputSchema = z.object({
   title: z.string().min(1).max(120),
@@ -12,7 +13,7 @@ const listingInputSchema = z.object({
   status: z.enum(LISTING_STATUSES),
   description: z.string().min(1).max(5000),
   condition: z.enum(LISTING_CONDITIONS),
-  photos: z.array(z.string().url()).min(1).max(12),
+  photos: photoUrlsSchema,
 })
 
 const assertAdmin = async () => {

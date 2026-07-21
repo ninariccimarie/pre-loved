@@ -38,6 +38,8 @@ const PhotoCarousel = ({ photos, title }: PhotoCarouselProps) => {
           alt={`${title} photo ${index + 1}`}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           loading="lazy"
+          referrerPolicy="no-referrer"
+          decoding="async"
         />
       </div>
 
