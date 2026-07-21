@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { getPublicCatalog } from '#/server/listings'
 import PromoCodeBar from '#/components/PromoCodeBar'
@@ -9,6 +9,7 @@ import { isPromoActive } from '#/lib/pricing'
 
 const HomePage = () => {
   const { listings, promoCode, saleDiscountPercent } = Route.useLoaderData()
+  const router = useRouter()
   const [promoInput, setPromoInput] = useState('')
   const [appliedPromo, setAppliedPromo] = useState('')
   const [activeListing, setActiveListing] = useState<Listing | null>(null)
@@ -33,8 +34,8 @@ const HomePage = () => {
           Browse our listings
         </h1>
         <p className="max-w-2xl text-base text-[var(--sea-ink-soft)]">
-          Gently used items looking for a new home. Reserve available items or join the waitlist
-          when something is already held.
+          Gently used items looking for a new home. Reserve available items, join the waitlist when
+          something is held, or add a few pieces to your cart for a bulk ask.
         </p>
       </section>
 
@@ -81,6 +82,9 @@ const HomePage = () => {
         enteredPromoCode={appliedPromo}
         saleDiscountPercent={saleDiscountPercent}
         onClose={closeInquiry}
+        onSubmitted={() => {
+          void router.invalidate()
+        }}
       />
     </main>
   )

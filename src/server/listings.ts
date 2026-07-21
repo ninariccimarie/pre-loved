@@ -56,6 +56,8 @@ export const createListing = createServerFn({ method: 'POST' })
     const listing: Listing = {
       id: randomUUID(),
       ...data,
+      clickCount: 0,
+      waitlistCount: 0,
       createdAt: now,
       updatedAt: now,
     }
@@ -82,4 +84,11 @@ export const deleteListing = createServerFn({ method: 'POST' })
     const { deleteListingRecord } = await import('#/lib/storage.server')
     await deleteListingRecord(data.id)
     return { success: true }
+  })
+
+export const recordListingClick = createServerFn({ method: 'POST' })
+  .validator(z.object({ id: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const { incrementListingClicks } = await import('#/lib/storage.server')
+    return { clickCount: await incrementListingClicks(data.id) }
   })

@@ -5,10 +5,11 @@ A TanStack Start web app for browsing pre-loved items, applying friend promo cod
 ## Features
 
 - **Public catalog** — browse all listings (available, reserved, and sold)
-- **Photo carousel** — swipe through multiple photos per item
+- **Photo preview** — click a listing photo for a full-resolution lightbox
 - **Promo codes** — friends enter a code to see slashed prices (gray) and sale prices (red)
-- **Reserve / waitlist** — modal form with name and contact, submitted to Formspree
-- **Admin dashboard** — create, edit, and delete listings; configure promo code and discount %
+- **Reserve / waitlist / cart** — single-item or bulk requests saved to the database (and Formspree when configured)
+- **Social proof** — view counts and waitlist counts on each listing
+- **Admin dashboard** — manage listings, promo settings, buyer requests, and waitlist; WhatsApp contact with one tap
 
 ## Quick start
 
@@ -87,7 +88,10 @@ Submissions include listing title, price, buyer name, contact number, and whethe
 1. Sign in at `/admin/login` (hidden from the public menu — bookmark the URL)
 2. Create listings with title, price (SGD or `0` for free), status, condition, description, and photo URLs
 3. Set promo code and sale discount % in the dashboard
-4. Mark items as reserved or sold as they move through your sale flow
+4. Review **Requests** (`/admin/requests`) — buyers are identified by mobile number; item links are green (available), orange (reserved), or gray (sold)
+5. Use **Contact** on a request to open WhatsApp with a prefilled message; the request is marked contacted
+6. Check **Waitlist** (`/admin/waitlist`) for waitlist-only entries, oldest first (name links to the order)
+7. Mark items as reserved or sold as they move through your sale flow
 
 Photo URLs can be Cloudflare R2 public links (`*.r2.dev` or a custom domain on your bucket),
 presigned R2 URLs, or any other public https image URL (one per line in the admin form).

@@ -1,6 +1,10 @@
 import { Link } from '@tanstack/react-router'
+import { ShoppingBag } from 'lucide-react'
+import { useCart } from '#/components/CartProvider'
 
 const Header = () => {
+  const { items, openCart } = useCart()
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--header-bg)] px-4 backdrop-blur-lg">
       <nav className="page-wrap flex flex-wrap items-center gap-x-3 gap-y-2 py-3 sm:py-4">
@@ -14,7 +18,7 @@ const Header = () => {
           </Link>
         </h2>
 
-        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-none sm:w-auto sm:flex-nowrap sm:pb-0">
+        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-none sm:w-auto sm:flex-1 sm:flex-nowrap sm:pb-0">
           <Link
             to="/"
             className="nav-link"
@@ -23,6 +27,20 @@ const Header = () => {
             Browse
           </Link>
         </div>
+
+        <button
+          type="button"
+          onClick={openCart}
+          className="relative ml-auto inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm font-semibold text-[var(--sea-ink)] shadow-[0_8px_24px_rgba(30,90,72,0.08)] transition hover:bg-[var(--link-bg-hover)]"
+        >
+          <ShoppingBag size={16} />
+          Cart
+          {items.length > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--lagoon-deep)] px-1 text-[10px] font-bold text-white">
+              {items.length}
+            </span>
+          )}
+        </button>
       </nav>
     </header>
   )

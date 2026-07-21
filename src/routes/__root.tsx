@@ -1,6 +1,8 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import CartPanel from '../components/CartPanel'
+import { CartProvider } from '../components/CartProvider'
 
 import appCss from '../styles.css?url'
 
@@ -11,9 +13,12 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
         <HeadContent />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-        <Header />
-        {children}
-        <Footer />
+        <CartProvider>
+          <Header />
+          {children}
+          <Footer />
+          <CartPanel />
+        </CartProvider>
         <Scripts />
       </body>
     </html>

@@ -5,6 +5,7 @@ import { deleteListing, getListings } from '#/server/listings'
 import { getPromoSettings, updatePromoSettings } from '#/server/settings'
 import { formatPrice } from '#/lib/pricing'
 import { CONDITION_LABELS, STATUS_LABELS } from '#/lib/types'
+import AdminNav from '#/components/AdminNav'
 
 const AdminDashboardPage = () => {
   const { listings, settings } = Route.useLoaderData()
@@ -54,14 +55,7 @@ const AdminDashboardPage = () => {
             Manage listings
           </h1>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Link to="/admin/listings/new" className="demo-button no-underline">
-            New listing
-          </Link>
-          <button type="button" className="demo-button demo-button-secondary" onClick={handleLogout}>
-            Log out
-          </button>
-        </div>
+        <AdminNav onLogout={handleLogout} />
       </div>
 
       <section className="island-shell mb-8 rounded-2xl p-5 sm:p-6">
@@ -118,6 +112,8 @@ const AdminDashboardPage = () => {
                 <th>Price</th>
                 <th>Status</th>
                 <th>Condition</th>
+                <th>Views</th>
+                <th>Waitlist</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -128,6 +124,8 @@ const AdminDashboardPage = () => {
                   <td>{formatPrice(listing.price)}</td>
                   <td>{STATUS_LABELS[listing.status]}</td>
                   <td>{CONDITION_LABELS[listing.condition]}</td>
+                  <td>{listing.clickCount}</td>
+                  <td>{listing.waitlistCount}</td>
                   <td>
                     <div className="flex flex-wrap gap-2">
                       <Link

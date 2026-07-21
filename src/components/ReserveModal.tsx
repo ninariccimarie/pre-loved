@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Listing } from '#/lib/types'
 import { formatPrice, getSalePrice, isPromoActive } from '#/lib/pricing'
+import { submitOrder } from '#/server/orders'
 import { X } from 'lucide-react'
 
 type InquiryType = 'reserve' | 'waitlist'
@@ -12,6 +13,7 @@ type ReserveModalProps = {
   enteredPromoCode: string
   saleDiscountPercent: number
   onClose: () => void
+  onSubmitted?: () => void
 }
 
 const formspreeId = import.meta.env.VITE_FORMSPREE_FORM_ID as string | undefined
@@ -23,6 +25,7 @@ const ReserveModal = ({
   enteredPromoCode,
   saleDiscountPercent,
   onClose,
+  onSubmitted,
 }: ReserveModalProps) => {
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
@@ -38,7 +41,7 @@ const ReserveModal = ({
     : listing.price
   const actionLabel = inquiryType === 'reserve' ? 'Confirm reservation' : 'Join waitlist'
 
-  const handleSubmit = async (event: React.SubmitEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setError('')
 
@@ -47,38 +50,49 @@ const ReserveModal = ({
       return
     }
 
-    if (!formspreeId) {
-      setError('Formspree is not configured. Set VITE_FORMSPREE_FORM_ID in your environment.')
-      return
-    }
-
     setSubmitting(true)
     try {
-      const response = await fetch(`https://formspree.io/f/${formspreeId}`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: inquiryType,
-          listingId: listing?.id,
-          listingTitle: listing?.title,
-          listingStatus: listing?.status,
-          price: formatPrice(displayPrice),
-          originalPrice: formatPrice(listing?.price),
-          promoApplied: promoActive,
+      await submitOrder({
+        data: {
           name: name.trim(),
           contact: contact.trim(),
-          _subject: `${inquiryType === 'reserve' ? 'Reservation' : 'Waitlist'}: ${listing.title}`,
-        }),
+          items: [
+            {
+              listingId: listing.id,
+              intent: inquiryType,
+            },
+          ],
+        },
       })
 
-      if (!response.ok) {
-        throw new Error('Unable to submit the form right now.')
+      if (formspreeId) {
+        const response = await fetch(`https://formspree.io/f/${formspreeId}`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: inquiryType,
+            listingId: listing.id,
+            listingTitle: listing.title,
+            listingStatus: listing.status,
+            price: formatPrice(displayPrice),
+            originalPrice: formatPrice(listing.price),
+            promoApplied: promoActive,
+            name: name.trim(),
+            contact: contact.trim(),
+            _subject: `${inquiryType === 'reserve' ? 'Reservation' : 'Waitlist'}: ${listing.title}`,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Saved locally, but email notification failed. Nina still has your request.')
+        }
       }
 
       setSubmitted(true)
+      onSubmitted?.()
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Something went wrong.')
     } finally {

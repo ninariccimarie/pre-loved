@@ -14,6 +14,9 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminListingsListingIdRouteImport } from './routes/admin/listings/$listingId'
 import { Route as AdminListingsNewRouteImport } from './routes/admin/listings/new'
+import { Route as AdminRequestsIndexRouteImport } from './routes/admin/requests/index'
+import { Route as AdminRequestsOrderIdRouteImport } from './routes/admin/requests/$orderId'
+import { Route as AdminWaitlistIndexRouteImport } from './routes/admin/waitlist/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +43,21 @@ const AdminListingsNewRoute = AdminListingsNewRouteImport.update({
   path: '/admin/listings/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRequestsIndexRoute = AdminRequestsIndexRouteImport.update({
+  id: '/admin/requests/',
+  path: '/admin/requests/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRequestsOrderIdRoute = AdminRequestsOrderIdRouteImport.update({
+  id: '/admin/requests/$orderId',
+  path: '/admin/requests/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminWaitlistIndexRoute = AdminWaitlistIndexRouteImport.update({
+  id: '/admin/waitlist/',
+  path: '/admin/waitlist/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +65,9 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/listings/$listingId': typeof AdminListingsListingIdRoute
   '/admin/listings/new': typeof AdminListingsNewRoute
+  '/admin/requests/$orderId': typeof AdminRequestsOrderIdRoute
+  '/admin/requests/': typeof AdminRequestsIndexRoute
+  '/admin/waitlist/': typeof AdminWaitlistIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +75,9 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/listings/$listingId': typeof AdminListingsListingIdRoute
   '/admin/listings/new': typeof AdminListingsNewRoute
+  '/admin/requests/$orderId': typeof AdminRequestsOrderIdRoute
+  '/admin/requests': typeof AdminRequestsIndexRoute
+  '/admin/waitlist': typeof AdminWaitlistIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +86,9 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/listings/$listingId': typeof AdminListingsListingIdRoute
   '/admin/listings/new': typeof AdminListingsNewRoute
+  '/admin/requests/$orderId': typeof AdminRequestsOrderIdRoute
+  '/admin/requests/': typeof AdminRequestsIndexRoute
+  '/admin/waitlist/': typeof AdminWaitlistIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,6 +98,9 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/listings/$listingId'
     | '/admin/listings/new'
+    | '/admin/requests/$orderId'
+    | '/admin/requests/'
+    | '/admin/waitlist/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -78,6 +108,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/listings/$listingId'
     | '/admin/listings/new'
+    | '/admin/requests/$orderId'
+    | '/admin/requests'
+    | '/admin/waitlist'
   id:
     | '__root__'
     | '/'
@@ -85,6 +118,9 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/listings/$listingId'
     | '/admin/listings/new'
+    | '/admin/requests/$orderId'
+    | '/admin/requests/'
+    | '/admin/waitlist/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,6 +129,9 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminListingsListingIdRoute: typeof AdminListingsListingIdRoute
   AdminListingsNewRoute: typeof AdminListingsNewRoute
+  AdminRequestsOrderIdRoute: typeof AdminRequestsOrderIdRoute
+  AdminRequestsIndexRoute: typeof AdminRequestsIndexRoute
+  AdminWaitlistIndexRoute: typeof AdminWaitlistIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -132,6 +171,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminListingsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/requests/': {
+      id: '/admin/requests/'
+      path: '/admin/requests'
+      fullPath: '/admin/requests/'
+      preLoaderRoute: typeof AdminRequestsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/requests/$orderId': {
+      id: '/admin/requests/$orderId'
+      path: '/admin/requests/$orderId'
+      fullPath: '/admin/requests/$orderId'
+      preLoaderRoute: typeof AdminRequestsOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/waitlist/': {
+      id: '/admin/waitlist/'
+      path: '/admin/waitlist'
+      fullPath: '/admin/waitlist/'
+      preLoaderRoute: typeof AdminWaitlistIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -141,6 +201,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminListingsListingIdRoute: AdminListingsListingIdRoute,
   AdminListingsNewRoute: AdminListingsNewRoute,
+  AdminRequestsOrderIdRoute: AdminRequestsOrderIdRoute,
+  AdminRequestsIndexRoute: AdminRequestsIndexRoute,
+  AdminWaitlistIndexRoute: AdminWaitlistIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
