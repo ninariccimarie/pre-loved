@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     buildCommand: corepack enable && corepack prepare pnpm@11.15.1 --activate && pnpm install --frozen-lockfile && pnpm run build
-    startCommand: node .output/server/index.mjs
+    startCommand: pnpm exec prisma migrate deploy && node .output/server/index.mjs
     envVars:
       - key: NODE_VERSION
         value: 22
@@ -14,9 +14,7 @@ services:
         generateValue: true
       - key: VITE_FORMSPREE_FORM_ID
         sync: false
-      - key: DATA_DIR
-        value: /data
-    disk:
-      name: pre-loved-data
-      mountPath: /data
-      sizeGB: 1
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false

@@ -36,8 +36,7 @@ export const getListing = createServerFn({ method: 'GET' })
 
 export const getPublicCatalog = createServerFn({ method: 'GET' }).handler(async () => {
   const { readListings, readPromoSettings } = await import('#/lib/storage.server')
-  const listings = readListings()
-  const settings = readPromoSettings()
+  const [listings, settings] = await Promise.all([readListings(), readPromoSettings()])
 
   return {
     listings,
@@ -80,6 +79,6 @@ export const deleteListing = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     await assertAdmin()
     const { deleteListingRecord } = await import('#/lib/storage.server')
-    deleteListingRecord(data.id)
+    await deleteListingRecord(data.id)
     return { success: true }
   })

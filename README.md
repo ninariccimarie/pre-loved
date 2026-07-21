@@ -12,12 +12,18 @@ A TanStack Start web app for browsing pre-loved items, applying friend promo cod
 
 ## Quick start
 
+1. Create a free Postgres database on [Neon](https://console.neon.tech)
+2. Copy the **pooled** and **direct** connection strings into `.env` (see below)
+3. Install and run:
+
 ```bash
 corepack enable
 corepack prepare pnpm@11.15.1 --activate
 pnpm install
 cp .env.example .env
-# Edit .env with your admin password and Formspree form ID
+# Edit .env with Neon URLs, admin password, and Formspree form ID
+pnpm exec prisma migrate deploy
+pnpm db:seed
 pnpm run dev
 ```
 
@@ -27,13 +33,36 @@ Default admin password (development only): `admin123` — change `ADMIN_PASSWORD
 
 Sample promo code in seed data: `FRIENDS20` (20% off).
 
-## Database
+## Database (Neon + Prisma)
 
-Listings and promo settings use **SQLite** through Node's built-in [`node:sqlite`](https://nodejs.org/api/sqlite.html) module — free, zero signup, no extra packages.
+Listings and promo settings are stored in **PostgreSQL** via [Prisma](https://www.prisma.io) on [Neon](https://neon.tech) (free tier).
 
-- Local file: `data/pre-loved.db` (created automatically on first run)
-- Sample rows are seeded from `data/listings.seed.json` and `data/settings.seed.json` when the DB is empty
-- On Render/Railway, put the file on a persistent disk via `DATA_DIR=/data`
+### Neon setup
+
+1. Sign up at [console.neon.tech](https://console.neon.tech) and create a project
+2. Open **Connection details**
+3. Copy the **pooled** connection string → `DATABASE_URL` (app runtime)
+4. Copy the **direct** connection string → `DIRECT_URL` (migrations)
+5. Both URLs should include `?sslmode=require`
+
+Example:
+
+```bash
+DATABASE_URL="postgresql://USER:PASSWORD@ep-xxxx-pooler.region.aws.neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgresql://USER:PASSWORD@ep-xxxx.region.aws.neon.tech/neondb?sslmode=require"
+```
+
+### Prisma commands
+
+```bash
+pnpm db:generate       # Generate Prisma Client
+pnpm db:migrate        # Apply migrations (production / Neon)
+pnpm db:migrate:dev    # Create + apply migrations in development
+pnpm db:seed           # Seed sample listings + promo settings
+pnpm db:studio         # Open Prisma Studio
+```
+
+Seed data lives in `data/listings.seed.json` and `data/settings.seed.json`.
 
 ## Environment variables
 
@@ -42,8 +71,8 @@ Listings and promo settings use **SQLite** through Node's built-in [`node:sqlite
 | `ADMIN_PASSWORD` | Admin login password |
 | `SESSION_SECRET` | Secret for signing admin session cookies |
 | `VITE_FORMSPREE_FORM_ID` | Formspree form ID for reserve/waitlist submissions |
-| `DATA_DIR` | Folder for the SQLite file (default: `./data`) |
-| `DATABASE_PATH` | Optional full path to the SQLite DB (default: `$DATA_DIR/pre-loved.db`) |
+| `DATABASE_URL` | Neon **pooled** Postgres URL (Prisma Client / app) |
+| `DIRECT_URL` | Neon **direct** Postgres URL (Prisma Migrate) |
 
 ## Formspree setup
 
@@ -66,34 +95,36 @@ Photo URLs can point to Imgur, Cloudinary, or any public image link (one URL per
 
 ```bash
 pnpm run dev      # Development server
-pnpm run build    # Production build
+pnpm run build    # Production build (includes prisma generate)
 pnpm run start    # Run production server (after build)
 pnpm run test     # Run tests
 ```
 
 ## Deployment (free options)
 
-This app uses **Nitro** and runs as a Node server. Listings live in a **SQLite** database file (via Node's built-in `node:sqlite` — no paid database service needed). Use a host with **persistent disk** so the DB survives restarts.
+This app uses **Nitro** and connects to **Neon Postgres**. No persistent disk is required for the database.
 
-### Recommended: Render (free tier)
+### Recommended: Render (free tier) + Neon
 
-1. Push this repo to GitHub
-2. Create a **Web Service** on [Render](https://render.com) and connect the repo
-3. Use the included `render.yaml` blueprint, or set manually:
+1. Create a Neon project and note `DATABASE_URL` + `DIRECT_URL`
+2. Push this repo to GitHub
+3. Create a **Web Service** on [Render](https://render.com) and connect the repo
+4. Use the included `render.yaml` blueprint, or set manually:
    - **Build command:** `corepack enable && corepack prepare pnpm@11.15.1 --activate && pnpm install --frozen-lockfile && pnpm run build`
-   - **Start command:** `node .output/server/index.mjs`
-   - **Disk:** mount at `/data` and set `DATA_DIR=/data`
-4. Add environment variables from `.env.example`
-5. Copy the **Deploy Hook** URL into GitHub secret `RENDER_DEPLOY_HOOK` for CI/CD deploys
+   - **Start command:** `pnpm exec prisma migrate deploy && node .output/server/index.mjs`
+5. Add environment variables from `.env.example` (including Neon `DATABASE_URL` and `DIRECT_URL`)
+6. Redeploy / restart once so migrations create the `listings` and `settings` tables
+7. Optionally seed once: `pnpm db:seed` with production env vars set locally
+8. Copy the **Deploy Hook** URL into GitHub secret `RENDER_DEPLOY_HOOK` for CI/CD deploys
 
 ### Also supported
 
 | Platform | Notes |
 | --- | --- |
-| [Railway](https://railway.com) | Connect GitHub repo; add a volume for `/data` |
-| [Fly.io](https://fly.io) | Attach a volume; set `DATA_DIR` |
-| [Cloudflare Workers](https://developers.cloudflare.com/workers/) | Prefer Cloudflare D1 instead of a local SQLite file |
-| [Netlify](https://netlify.com) | Prefer Turso/Neon/Supabase free tier instead of a local file |
+| [Railway](https://railway.com) | Connect GitHub repo; set Neon env vars |
+| [Fly.io](https://fly.io) | Set Neon env vars on the app |
+| [Vercel](https://vercel.com) | Works with Neon; use Nitro/Vercel preset if needed |
+| [Netlify](https://netlify.com) | Set Neon env vars; add TanStack Start Netlify plugin if needed |
 
 ## CI/CD
 
@@ -118,9 +149,11 @@ Create a GitHub Environment named **`production`**, then add these secrets under
 
 | Secret | Description |
 | --- | --- |
-| `ADMIN_PASSWORD` | Admin login password baked into the build |
+| `ADMIN_PASSWORD` | Admin login password |
 | `SESSION_SECRET` | Session signing secret |
 | `VITE_FORMSPREE_FORM_ID` | Formspree form ID (client-side) |
+| `DATABASE_URL` | Neon pooled connection string |
+| `DIRECT_URL` | Neon direct connection string |
 | `RENDER_DEPLOY_HOOK` | Render deploy hook URL (optional; skips deploy trigger if empty) |
 
 ## Tech stack
@@ -128,4 +161,4 @@ Create a GitHub Environment named **`production`**, then add these secrets under
 - [TanStack Start](https://tanstack.com/start) + [TanStack Router](https://tanstack.com/router)
 - React 19, Vite 8, Nitro, Tailwind CSS 4
 - Formspree for form delivery
-- SQLite (`node:sqlite`) for listings and promo settings — free, no external DB account
+- [Prisma](https://www.prisma.io) + [Neon](https://neon.tech) PostgreSQL

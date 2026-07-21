@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ListingStatus {
+  available
+  reserved
+  sold
+}
+
+enum ListingCondition {
+  brand_new
+  like_new
+  lightly_used
+  well_used
+  heavily_used
+}
+
+model Listing {
+  id          String           @id @default(cuid())
+  title       String
+  price       Float
+  status      ListingStatus
+  description String
+  condition   ListingCondition
+  photos      String[]
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  @@map("listings")
+}
+
+model Settings {
+  id                  Int    @id @default(1)
+  promoCode           String @default("") @map("promo_code")
+  saleDiscountPercent Float  @default(0) @map("sale_discount_percent")
+
+  @@map("settings")
+}

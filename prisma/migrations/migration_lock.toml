@@ -1,0 +1,4 @@
+# Prisma Migration Lockfile
+# This is a PostgreSQL migration.
+
+provider = "postgresql"

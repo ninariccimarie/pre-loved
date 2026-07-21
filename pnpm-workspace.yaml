@@ -1,8 +1,10 @@
 # pnpm 11+ project settings
 # Opt out of the default 1-day publish delay so CI can install freshly released deps
-# (TanStack "latest", browserslist data, etc. often ship within that window).
-minimumReleaseAge: 1440
+minimumReleaseAge: 0
 
 allowBuilds:
   esbuild: true
   lightningcss: true
+  prisma: true
+  '@prisma/engines': true
+  '@prisma/client': true
